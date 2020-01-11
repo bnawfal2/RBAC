@@ -2,6 +2,9 @@
 
 namespace Cosmos\Rbac\Test;
 
+use Cosmos\Rbac\Role;
+use Cosmos\Rbac\Permission;
+use Cosmos\Rbac\RbacServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -10,6 +13,11 @@ abstract class TestCase extends Orchestra
     /** @var \Cosmos\Rbac\Test\User */
     protected $testUser;
 
+    /**
+     * setUp
+     * @override
+     * @return void
+     */
     public function setUp(): void
     {
         parent::setUp();
@@ -19,8 +27,21 @@ abstract class TestCase extends Orchestra
     }
 
     /**
+     * Set provider
+     * @override
+     * @param \Illuminate\Foundation\Application $app
+     * @return array
+     */
+    protected function getPackageProviders($app): array
+    {
+        return [
+            RbacServiceProvider::class,
+        ];
+    }
+
+    /**
      * Set up the environment.
-     *
+     * @override
      * @param \Illuminate\Foundation\Application $app
      */
     protected function getEnvironmentSetUp($app)
@@ -33,8 +54,10 @@ abstract class TestCase extends Orchestra
         ]);
         // $app['config']->set('view.paths', [__DIR__.'/resources/views']);
 
-        $app['config']->set('rbac.models.role', 'Cosmos\Rbac\Test\Role');
-        $app['config']->set('rbac.models.permission', 'Cosmos\Rbac\Test\Permission');
+        $app['config']->set('rbac.models.role', 'Cosmos\Rbac\Role');
+        $app['config']->set('rbac.models.permission', 'Cosmos\Rbac\Permission');
+        $app['config']->set('rbac.cache.key', 'rbac.cache');
+        $app['config']->set('rbac.cache.expires', \DateInterval::createFromDateString('24 hours'));
     }
 
     /**

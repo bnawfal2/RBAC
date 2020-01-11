@@ -2,22 +2,29 @@
 
 namespace Cosmos\Rbac;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Chelout\RelationshipEvents\Concerns\HasBelongsToManyEvents;
 
+/**
+ * A trait for User model that using RBAC.
+ */
 trait RoleBasedAccessControl
 {
-    /**
-     * Returns cached roles.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function cachedRoles()
+    use HasBelongsToManyEvents;
+
+    public static function bootRoleBasedAccessControl()
     {
-        $cacheKey = 'roles_for_user_'.$this->getKey();
-        return Cache::remember($cacheKey, 60, function () {
-            return $this->roles()->get();
-        });
+        $forgetCache = function ($name, $model) {
+            Cache::forget($model->getCacheKey());
+        };
+
+        static::belongsToManyAttached($forgetCache);
+        static::belongsToManyDetached($forgetCache);
+        static::belongsToManySynced($forgetCache);
+        static::belongsToManyToggled($forgetCache);
     }
 
     /**
@@ -25,10 +32,8 @@ trait RoleBasedAccessControl
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function roles()
+    public function roles(): BelongsToMany
     {
-        // TODO: fix this..
-        // https://github.com/spatie/laravel-permission/tree/master/tests
         return $this->belongsToMany(config('rbac.models.role', 'App\Role'));
     }
 
@@ -39,7 +44,7 @@ trait RoleBasedAccessControl
      * @param boolean $requireAll default: false
      * @return boolean
      */
-    public function hasRole($name, $requireAll = false)
+    public function hasRole($name, $requireAll = false): bool
     {
         if (is_array($name)) {
             foreach ($name as $roleName) {
@@ -72,7 +77,7 @@ trait RoleBasedAccessControl
      * @param bool $requireAll All permissions in the array are required.
      * @return bool
      */
-    public function hasPermission($permission, $requireAll = false)
+    public function hasPermission($permission, $requireAll = false): bool
     {
         if (is_array($permission)) {
             foreach ($permission as $permName) {
@@ -92,7 +97,7 @@ trait RoleBasedAccessControl
         } else {
             foreach ($this->cachedRoles() as $role) {
                 // Validate against the Permission table
-                foreach ($role->permissions()->get() as $perm) {
+                foreach ($role->cachedPermissions() as $perm) {
                     if (Str::is($permission, $perm->name)) return true;
                 }
             }
@@ -153,5 +158,22 @@ trait RoleBasedAccessControl
         foreach ($roles as $role) {
             $this->detachRole($role);
         }
+    }
+
+    /**
+     * Returns cached roles.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function cachedRoles(): Collection
+    {
+        return Cache::remember($this->getCacheKey(), config('rbac.cache.expires', 3600), function () {
+            return $this->roles()->get();
+        });
+    }
+
+    protected function getCacheKey()
+    {
+        return config('rbac.cache.key', 'rbac.cache').'.rolesFor.'.$this->getKey();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Cosmos\Rbac\Test;
+namespace Cosmos\Rbac;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +11,6 @@ class Permission extends Model
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(config('rbac.model.role', 'App\Role'));
     }
 }
