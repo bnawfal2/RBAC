@@ -15,7 +15,7 @@ class RbacServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(__DIR__.'/../config/rbac.php', 'rbac');
     }
 
     /**
@@ -34,16 +34,16 @@ class RbacServiceProvider extends ServiceProvider
 
     private function bladeDirectives()
     {
-        Blade::if('role', function ($name) {
+        Blade::if('role', function ($name, $requireAll = false) {
             if (!Auth::check()) return false;
-            $user = \App\User::find(Auth::user()->id);
-            return $user->hasRole($name);
+            $names = is_array($name) ? $name : explode(',', $name);
+            return Auth::user()->hasRole($names, $requireAll);
         });
 
-        Blade::if('permission', function ($name) {
+        Blade::if('permission', function ($name, $requireAll = false) {
             if (!Auth::check()) return false;
-            $user = \App\User::find(Auth::user()->id);
-            return $user->hasPermission($name);
+            $names = is_array($name) ? $name : explode(',', $name);
+            return Auth::user()->hasPermission($names, $requireAll);
         });
     }
 }

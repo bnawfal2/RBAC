@@ -6,6 +6,7 @@ use Chelout\RelationshipEvents\Concerns\HasBelongsToManyEvents;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use \Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends Model
 {
@@ -28,12 +29,12 @@ class Role extends Model
         static::belongsToManyToggled($forgetCache);
     }
 
-    public function permissions()
+    public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(config('rbac.models.permission', 'App\Permission'));
     }
 
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(config('rbac.models.user', 'App\User'));
     }
@@ -50,7 +51,7 @@ class Role extends Model
         });
     }
 
-    protected function getCacheKey()
+    protected function getCacheKey(): string
     {
         return config('rbac.cache.key', 'rbac,cache').'.permissionsFor.'.$this->getKey();
     }

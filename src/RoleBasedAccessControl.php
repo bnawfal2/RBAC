@@ -9,13 +9,13 @@ use Illuminate\Support\Str;
 use Chelout\RelationshipEvents\Concerns\HasBelongsToManyEvents;
 
 /**
- * A trait for User model that using RBAC.
+ * A trait for using Role-based access control in the User that a Laravel eloquent model.
  */
 trait RoleBasedAccessControl
 {
     use HasBelongsToManyEvents;
 
-    public static function bootRoleBasedAccessControl()
+    public static function bootRoleBasedAccessControl(): void
     {
         $forgetCache = function ($name, $model) {
             Cache::forget($model->getCacheKey());
@@ -111,7 +111,7 @@ trait RoleBasedAccessControl
      *
      * @param mixed $role
      */
-    public function attachRole($role)
+    public function attachRole($role): void
     {
         if(is_object($role)) {
             $role = $role->getKey();
@@ -125,7 +125,7 @@ trait RoleBasedAccessControl
      *
      * @param mixed $role
      */
-    public function detachRole($role)
+    public function detachRole($role): void
     {
         if (is_object($role)) {
             $role = $role->getKey();
@@ -139,7 +139,7 @@ trait RoleBasedAccessControl
      *
      * @param mixed $roles
      */
-    public function attachRoles($roles)
+    public function attachRoles($roles): void
     {
         foreach ($roles as $role) {
             $this->attachRole($role);
@@ -151,7 +151,7 @@ trait RoleBasedAccessControl
      *
      * @param mixed $roles
      */
-    public function detachRoles($roles=null)
+    public function detachRoles($roles = null): void
     {
         if (!$roles) $roles = $this->roles()->get();
 
@@ -172,7 +172,7 @@ trait RoleBasedAccessControl
         });
     }
 
-    protected function getCacheKey()
+    protected function getCacheKey(): string
     {
         return config('rbac.cache.key', 'rbac.cache').'.rolesFor.'.$this->getKey();
     }
