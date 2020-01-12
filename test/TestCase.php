@@ -52,12 +52,11 @@ abstract class TestCase extends Orchestra
             'database' => ':memory:',
             'prefix'   => '',
         ]);
-        // $app['config']->set('view.paths', [__DIR__.'/resources/views']);
+
+        $app['config']->set('view.paths', [__DIR__.'/resources/views']);
 
         $app['config']->set('rbac.models.role', 'Cosmos\Rbac\Role');
         $app['config']->set('rbac.models.permission', 'Cosmos\Rbac\Permission');
-        $app['config']->set('rbac.cache.key', 'rbac.cache');
-        $app['config']->set('rbac.cache.expires', \DateInterval::createFromDateString('24 hours'));
     }
 
     /**
