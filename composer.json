@@ -1,6 +1,6 @@
 {
     "name": "cosmos/rbac",
-    "description": "A trait for using RBAC in User that a Laravel eloquent model.",
+    "description": "A trait for using Role-based access control in the User that a Laravel eloquent model.",
     "type": "library",
     "license": "MIT",
     "authors": [
