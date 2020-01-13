@@ -80,8 +80,8 @@ You can add middleware inside your `app/Http/Kernel.php` file:
 ``` php
 protected $routeMiddleware = [
     // ...
-    'role' => \Cosmos\Rbac\Middlewares\Role::class,
-    'permission' => \Cosmos\Rbac\Middlewares\Permission::class,
+    'role' => \Cosmos\Rbac\Middleware\Role::class,
+    'permission' => \Cosmos\Rbac\Middleware\Permission::class,
 ];
 ```
 

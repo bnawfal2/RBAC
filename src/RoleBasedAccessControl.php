@@ -90,8 +90,8 @@ trait RoleBasedAccessControl
                 }
             }
 
-            // If we've made it this far and $requireAll is FALSE, then NONE of the perms were found
-            // If we've made it this far and $requireAll is TRUE, then ALL of the perms were found.
+            // If we've made it this far and $requireAll is FALSE, then NONE of the permissions were found
+            // If we've made it this far and $requireAll is TRUE, then ALL of the permissions were found.
             // Return the value of $requireAll;
             return $requireAll;
         } else {

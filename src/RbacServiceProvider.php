@@ -26,7 +26,7 @@ class RbacServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/permission.php' => config_path('rbac.php'),
+            __DIR__.'/../config/rbac.php' => config_path('rbac.php'),
         ], 'config');
 
         $this->bladeDirectives();
