@@ -12,6 +12,6 @@ class Permission extends Model
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(config('rbac.model.role', 'App\Role'));
+        return $this->belongsToMany(config('rbac.model.role', 'App\Models\Role'));
     }
 }

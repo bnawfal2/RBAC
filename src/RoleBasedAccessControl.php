@@ -34,7 +34,7 @@ trait RoleBasedAccessControl
      */
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(config('rbac.models.role', 'App\Role'));
+        return $this->belongsToMany(config('rbac.models.role', 'App\Models\Role'));
     }
 
     /**

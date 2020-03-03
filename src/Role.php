@@ -31,12 +31,12 @@ class Role extends Model
 
     public function permissions(): BelongsToMany
     {
-        return $this->belongsToMany(config('rbac.models.permission', 'App\Permission'));
+        return $this->belongsToMany(config('rbac.models.permission', 'App\Models\Permission'));
     }
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(config('rbac.models.user', 'App\User'));
+        return $this->belongsToMany(config('rbac.models.user', 'App\Models\User'));
     }
 
     /**
