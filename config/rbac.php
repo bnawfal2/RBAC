@@ -2,9 +2,9 @@
 
 return [
     'models' => [
-        'user' => 'App\User',
-        'role' => 'App\Role',
-        'permission' => 'App\Permission',
+        'user' => 'App\Models\User',
+        'role' => 'App\Models\Role',
+        'permission' => 'App\Models\Permission',
     ],
     'cache' => [
         'expires' => \DateInterval::createFromDateString('24 hours'),
